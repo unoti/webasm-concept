@@ -30,6 +30,17 @@ Main:
     STA $0002
     LDA #$4f ; 'O
     STA $0003
+
+; I'd love to also execute this code, but wla-dx can't handle it.
+;    ; Now do some counting at $1000.
+;.16BIT
+;    LDX #$1000.W
+;    LDA #10
+;Countlp:
+;    STA ,X+
+;    DECA
+;    BNE Countlp
+
 .ENDS
 
 ; On reset, the 6809 processor reads address $FFFE

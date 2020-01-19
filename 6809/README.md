@@ -153,7 +153,85 @@ cd /code/6809/sayhello
 # The 0 here is to tell the emulator to load our rom image at address 0.
 /code/local/mc6809/mc09emulator linked.rom 0
 ```
-It will execute our code, then crash when it gets to undefined instructions after our code.  It them produces a dump of what our memory looked like at the end into the file ```mc6809-core```.
-```bash
+It will execute our code, then crash when it gets to undefined instructions after our code.  It them produces a dump of what our memory looked like at the end into the file ```mc6809-core```.  If we dump this file it'll show you the memory after execution:
+```
+# hexdump -C mc6809-core
+```
+You can see that it successfully executed, putting RICO in the first 4 bytes of memory.
+```
+00000000  52 49 43 4f aa aa aa aa  aa aa aa aa aa aa aa aa  |RICO............|
+00000010  aa aa aa aa aa aa aa aa  aa aa aa aa aa aa aa aa  |................|
+*
+0000f000  86 52 97 00 86 49 97 01  86 43 97 02 86 4f 97 03  |.R...I...C...O..|
+0000f010  aa aa aa aa aa aa aa aa  aa aa aa aa aa aa aa aa  |................|
+*
+0000fff0  aa aa aa aa aa aa aa aa  aa aa aa aa aa aa f0 00  |................|
+00010000  50 4f ff 00 00 00 00 00  00 00 ff f8 f0 12        |PO............|
+0001000e
 
+```
+
+Ok I'm pretty disappointed with wla-dx for 6809.  Whatever is going on with SLOTS is super confusing and not well documented.  The deal breaker was it can't properly assemble ```LDX #$1000``` or ```ADDD #$1234``` even if I add .BIT16 or the .W suffix (both of which are hacky and non-standard).
+
+## Try Masm for 6809
+* (Linux 8-bit cross assemblers)[http://www.solorb.com/linux8bit/]
+Let's try **masm** for the 6809 from this page.
+
+```
+curl http://www.solorb.com/linux8bit/masm.tar.gz --output masm.tar.gz
+tar xvzf masm.tar.gz
+rm masm.tar.gz
+```
+Now compile it:
+```
+cd /code/6809/masm
+gcc -o as11 as11.c
+```
+That produces ```as11```.  Looking at the readme, it appears taht it determines which kind of assembler to be based on the filename. So let's copy it:
+```
+ln -s as11 as9
+```
+
+Documentation from the Readme:
+```
+Usage: ./as11 [file(s)] [- l b h s c d]
+
+Version: March 17, 1996
+    defaults to Motorola S19 file output
+-h: Intel hex file output
+-b: 64K binary image file output
+-l: list file
+-s: Symbol table dump
+-c: cross reference output
+-d: debug mode
+```
+
+### Assemble sayhello
+From the Linux container:
+```
+cd /code/6809/sayhello-masm
+make
+hexdump -C sayhello.obj
+```
+
+Now execute it:
+```
+/code/local/mc6809/mc09emulator sayhello.obj 0
+```
+Then dump the ram of the virtual machine to see if it executed:
+```
+hexdump -C mc6809-core
+```
+```
+root@2233d6907e98:/code/6809/sayhello-masm# hexdump -C mc6809-core
+00000000  52 49 43 4f 00 00 00 00  00 00 00 00 00 00 00 00  |RICO............|
+00000010  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+*
+0000f000  86 52 97 00 86 49 97 01  86 43 97 02 86 4f 97 03  |.R...I...C...O..|
+0000f010  aa aa aa aa 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+0000f020  00 00 00 00 00 00 00 00  00 00 00 00 00 00 00 00  |................|
+*
+0000fff0  00 00 00 00 00 00 00 00  00 00 00 00 00 00 f0 00  |................|
+00010000  50 4f ff 00 00 00 00 00  00 00 ff f8 f0 12        |PO............|
+0001000e
 ```

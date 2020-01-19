@@ -5,6 +5,7 @@ local/
 6809/sayhello/*.rom
 6809/sayhello/*.sym
 6809/sayhello/mc6809-core
+6809/sayhello-masm/mc6809-core
 
 # Prerequisites
 *.d
