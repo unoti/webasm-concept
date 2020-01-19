@@ -1,3 +1,11 @@
+# We'll be downloading and building things here
+local/
+6809/wla-dx-example/*.rom
+6809/wla-dx-example/*.sym
+6809/sayhello/*.rom
+6809/sayhello/*.sym
+6809/sayhello/mc6809-core
+
 # Prerequisites
 *.d
 
