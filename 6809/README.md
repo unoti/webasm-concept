@@ -120,3 +120,40 @@ So to start disassembling at address $9a, do this:
 ```
 
 /code/local/mc6809/mc09emulator linked.rom 0
+
+## Assemble sayhello
+```
+cd /code/6809/sayhello
+make
+ls -l linked.rom
+hexdump -C linked.rom
+```
+You'll see:
+```
+root@2233d6907e98:/code/6809/sayhello# hexdump -C linked.rom
+00000000  aa aa aa aa aa aa aa aa  aa aa aa aa aa aa aa aa  |................|
+*
+0000f000  86 52 97 00 86 49 97 01  86 43 97 02 86 4f 97 03  |.R...I...C...O..|
+0000f010  aa aa aa aa aa aa aa aa  aa aa aa aa aa aa aa aa  |................|
+*
+0000fff0  aa aa aa aa aa aa aa aa  aa aa aa aa aa aa f0 00  |................|
+00010000
+```
+Note that our executable code starts at $f000 as we expect looking at main.s.
+Also note that the 2 bytes at $fffe are the vector to the start of our code ($f000).
+
+We're using a 64kb output rom.  It's possible to set the linker and source files up such that you just have a smaller file that represents what you'd burn to a rom, say a 4kb or 2kb file, but a full 64kb file is fine for now.
+
+Note that the memory at 0 is filled with $AA.
+
+## Execute sayhello in the 6809 emulator.
+From the Linux container:
+```bash
+cd /code/6809/sayhello
+# The 0 here is to tell the emulator to load our rom image at address 0.
+/code/local/mc6809/mc09emulator linked.rom 0
+```
+It will execute our code, then crash when it gets to undefined instructions after our code.  It them produces a dump of what our memory looked like at the end into the file ```mc6809-core```.
+```bash
+
+```

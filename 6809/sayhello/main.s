@@ -5,24 +5,19 @@
 .MEMORYMAP
    DEFAULTSLOT     0
    ; RAM area
-   SLOTSIZE $4000
+   SLOTSIZE $10000
    SLOT 0 $0000
-   SLOT 1 $4000
-   SLOT 2 $8000
-   ; ROM area
-   SLOTSIZE $1000
-   SLOT 3 $F000
 .ENDME
 
 .ROMBANKMAP
-BANKSTOTAL 4
-BANKSIZE $1000
-BANKS 4
+BANKSTOTAL 1
+BANKSIZE $10000
+BANKS 1
 .ENDRO
 
 .EMPTYFILL $AA
 
-.BANK 0 SLOT 3
+.BANK 0 SLOT 0
 .ORGA $F000
 
 .SECTION "MAIN" FORCE
@@ -37,6 +32,8 @@ Main:
     STA $0003
 .ENDS
 
+; On reset, the 6809 processor reads address $FFFE
+; and starts executing there.  This puts the address of Main ($F000) into that vector.
 .ORGA $FFFE
 .SECTION "VECTORS" FORCE
 .DW Main
