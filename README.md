@@ -42,7 +42,7 @@ cd /code
 ```
 
 apt-get install bsdmainutils # For hexdump / hd
-apt-get install lld # Is this still needed?
+apt-get install lld # Is this still needed? yes
 
 vscode extension dtsvet.vscode-wasm -- preview wasm files by right clicking them
 
