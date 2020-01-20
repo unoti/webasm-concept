@@ -18,6 +18,7 @@ export class OutputStream {
 
     flush = () => {
         this.output(this.buffer);
+        this.buffer = ""
     }
 
     output = (s) => {

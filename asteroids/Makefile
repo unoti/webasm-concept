@@ -1,7 +1,7 @@
-hi.wasm: hi.c
+asteroids.wasm: asteroids.c
 	clang --target=wasm32 -nostdlib -Wl,--no-entry -Wl,--export-all \
 	-Wl,--allow-undefined \
-	-o hi.wasm hi.c
+	-o asteroids.wasm asteroids.c
 
 clean :
-	rm --force hi.wasm
+	rm --force asteroids.wasm
