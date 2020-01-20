@@ -185,11 +185,8 @@ rm masm.tar.gz
 Now compile it:
 ```
 cd /code/6809/masm
-gcc -o as11 as11.c
-```
-That produces ```as11```.  Looking at the readme, it appears taht it determines which kind of assembler to be based on the filename. So let's copy it:
-```
-ln -s as11 as9
+gcc -o as9 as9.c
+cp as9 /usr/bin # Install it
 ```
 
 Documentation from the Readme:
