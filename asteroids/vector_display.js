@@ -3,8 +3,9 @@ export class VectorDisplay {
         this.canvas = canvas;
         this.max_x = canvas.width;
         this.max_y = canvas.height;
-        console.log(`w=${canvas.width} h=${canvas.height}`);
         this.isGunOn = false;
+        this.background = 'black';
+        this.foreground = 'white';
         this.move_to(this.max_x/2, this.max_y/2);
         // Draw list format:
         // Array of polylines.
@@ -32,12 +33,13 @@ export class VectorDisplay {
     }
 
     render = () => {
+        // If we've been drawing a line, stop it now.
         this._polyline_close();
-        console.log('render: polylines:');
-        console.log(this._polylines);
         var ctx = this.canvas.getContext('2d');
-        ctx.fillStyle = 'rgb(200,0,0)';
-        ctx.fillRect(30,30,50,50);
+
+        ctx.fillStyle = this.background;
+        ctx.fillRect(0, 0, this.max_x, this.max_y);
+        ctx.strokeStyle = this.foreground;
 
         while (this._polylines.length) {
             var polyline = this._polylines.pop();

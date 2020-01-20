@@ -1,6 +1,13 @@
 extern void sys_putc_int(int n);
 extern void sys_timer_request(int period_ms);
 extern void sys_timer_cancel();
+extern void sys_vector_gun(int on);
+extern void sys_vector_move_to(float x, float y);
+extern void sys_vector_render(void);
+
+#define VECTOR_MAX_X 1200
+#define VECTOR_MAX_Y 1200
+#define TEST_BAR_COUNT 16
 
 int timer_count;
 
@@ -32,8 +39,41 @@ void print_num(float n) {
    sys_putc_int('\n');
 }
 
-int sys_init() {
+void vector_line(float x0, float y0, float x1, float y1) {
+   sys_vector_gun(0);
+   sys_vector_move_to(x0, y0);
+   sys_vector_gun(1);
+   sys_vector_move_to(x1, y1);
+   sys_vector_gun(0);
+}
+
+void draw_test_pattern() {
+   float dx = VECTOR_MAX_X / TEST_BAR_COUNT;
+   // Vertical bars
+   sys_vector_gun(0);
+   sys_vector_move_to(0,0);
+   sys_vector_gun(1);
+   for (float x=0; x <= VECTOR_MAX_X - dx; x += dx) {
+      sys_vector_move_to(x, 0);
+      sys_vector_move_to(x, VECTOR_MAX_Y);
+      sys_vector_move_to(x + dx, VECTOR_MAX_Y);
+   }
+   sys_vector_gun(0);
+
+   // Horizontal bars
+   float dy = VECTOR_MAX_Y / TEST_BAR_COUNT;
+   sys_vector_gun(0);
+   sys_vector_move_to(0, dy);
+   for (float y=0; y <= VECTOR_MAX_Y - dy; y += dy) {
+      vector_line(0, y, VECTOR_MAX_X, y);      
+   }
+   sys_vector_gun(0);
+   sys_vector_render();
+}
+
+int main() {
    writeln("Rico was here");
+   draw_test_pattern();
    timer_count = 0;
    sys_timer_request(1000);
    return 42; 

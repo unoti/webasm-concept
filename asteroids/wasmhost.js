@@ -17,11 +17,14 @@ export class WasmHost {
                 sys_putc_int: this.stdout.putc_int,
                 sys_timer_request: this.sys_timer_request,
                 sys_timer_cancel: this.sys_timer_cancel,
+                sys_vector_gun: this.vector_display.gun,
+                sys_vector_move_to: this.vector_display.move_to,
+                sys_vector_render: this.vector_display.render,
             }
         };
         // Exports from module to host:
         // sys_timer_expired(float elapsed_milliseconds)
-        // sys_init()
+        // main()
     }
 
     async start() {
@@ -30,25 +33,8 @@ export class WasmHost {
         var instance_source = await WebAssembly.instantiate(wasmBytes, this.imports);
         this.wasm_instance = instance_source.instance;
         this.wasm_module = instance_source.module;
-        document.getElementById('output').textContent = this.wasm_instance.exports.sys_init();
 
-        var v = this.vector_display;
-        v.gun(0);
-        v.move_to(0,0);
-        v.gun(1);
-        for (var x = 0; x < 100; x += 20) {
-            v.move_to(x, 0);
-            v.move_to(x, 20);
-        }
-        v.gun(0);
-        v.move_to(30,30);
-        v.gun(1)
-        v.move_to(60,60);
-        v.gun(0);
-        v.move_to(60,30);
-        v.gun(1)
-        v.move_to(30,60);
-        v.render();
+        this.wasm_instance.exports.main();
     }
 
     // Import functions
