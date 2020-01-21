@@ -1,7 +1,8 @@
+#include "asteroids.h"
 #include "sys_host.h"
 #include "render.h"
 
-int timer_count;
+struct asteroids_state state;
 
 void write_string(char* s) {
    while (*s) {
@@ -22,20 +23,43 @@ void print_num(float n) {
    sys_putc_int('\n');
 }
 
-/** Called by host when a timer expires. */
-void sys_timer_expired(float elapsed_milliseconds) {
-   writeln("asteroids.c: Timer called");
-   draw_test_pattern(timer_count);
-   if (++timer_count >= 100) {
-      writeln("Disabling timer");
-      sys_timer_cancel();
+void populate_asteroids(struct asteroids_state* state) {
+   unsigned char size = 0;
+   int model = 0;
+   for (int i=0; i<MAX_ASTEROIDS; i++) {
+      int id = ++state->last_id_assigned;
+      struct asteroid* a = &state->asteroids[i];
+      a->id = id;
+      a->active = TRUE;
+      a->size = size;
+      a->model = get_asteroid_model(model);
+      a->pos.x = i * 110 + 50;
+      a->pos.y = i * 110 + 50;
+      model = (model + 1) % ASTEROID_MODEL_COUNT;
+      size = (size + 1) % ASTEROID_SIZE_COUNT;
    }
 }
 
+void init_state(struct asteroids_state* state) {
+   state->last_id_assigned = 0;
+   state->frame_count = 0;
+   populate_asteroids(state);
+}
+
+/** Called by host when a timer expires. */
+void sys_timer_expired(float elapsed_milliseconds) {
+   writeln("asteroids.c: Timer called");
+   writeln("Cancelling timer");
+   sys_timer_cancel();
+   render(&state);
+}
+
 int main() {
-   writeln("Rico was here");
-   draw_test_pattern(0);
-   timer_count = 0;
-   sys_timer_request(100);
+   writeln("Asteroids - Rico was here");
+   init_state(&state);
+
+   int frame_per_second = 60;
+   int frame_milliseconds = 1000 / frame_per_second;
+   sys_timer_request(frame_milliseconds);
    return 42; 
 }

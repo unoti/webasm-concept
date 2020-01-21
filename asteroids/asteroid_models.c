@@ -9,7 +9,8 @@
 // Each asteroid contains 10 points.
 // The points range from -0.5 to + 0.5.
 // There are 12 asteroids * 10 points * 2 values per point = 240.
-int asteroid_model_count = 12;
+#include "asteroids.h"
+
 double asteroid_models[240] = 
 {
 // Model 0
@@ -156,3 +157,8 @@ double asteroid_models[240] =
 0.12602700964353536, -0.4657586866417139,
 0.4617283529133857, -0.2523911283239903
 };
+
+double* get_asteroid_model(int model_num) {
+    int offset = model_num * ASTEROID_MODEL_POINT_COUNT * 2;
+    return asteroid_models + offset;
+}

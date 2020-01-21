@@ -20,6 +20,7 @@ export class WasmHost {
                 sys_vector_gun: this.vector_display.gun,
                 sys_vector_move_to: this.vector_display.move_to,
                 sys_vector_render: this.vector_display.render,
+                sys_print_num: this.sys_print_num,
             }
         };
         // Exports from module to host:
@@ -57,5 +58,9 @@ export class WasmHost {
         clearInterval(this.timer_id);
         this.timer_id = null;
         this.timer_last_invoked = null;
+    }
+
+    sys_print_num = (n) => {
+        console.log(n);
     }
 }
