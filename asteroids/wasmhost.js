@@ -21,6 +21,7 @@ export class WasmHost {
                 sys_vector_move_to: this.vector_display.move_to,
                 sys_vector_render: this.vector_display.render,
                 sys_print_num: this.sys_print_num,
+                sys_random: this.sys_random,
             }
         };
         // Exports from module to host:
@@ -62,5 +63,9 @@ export class WasmHost {
 
     sys_print_num = (n) => {
         console.log(n);
+    }
+
+    sys_random = () => {
+        return Math.random();
     }
 }
