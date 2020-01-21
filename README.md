@@ -63,3 +63,14 @@ python -m http.server # Runs a web server on port 8000
 ```
 
 Now open a browser to http://localhost:8000 and you should see "Output: 42"!
+
+
+## Next Steps
+* Linking with stdlib / libc
+You'll maybe want to link libc into your asteroids game for sin, cos, and atan2.
+To do that, look at these resources:
+* [WASI tutorial](https://github.com/bytecodealliance/wasmtime/blob/master/docs/WASI-tutorial.md)
+WASI releases a clang that's preconfigured to link stdlib and libc built for WebAssembly, and includes
+a runtime library that requires you to explicitly set permissions to files, directories, and other system resources.
+
+* [Compiling C code with WASI](https://00f.net/2019/04/07/compiling-to-webassembly-with-llvm-and-clang/)

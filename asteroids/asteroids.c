@@ -1,9 +1,5 @@
-extern void sys_putc_int(int n);
-extern void sys_timer_request(int period_ms);
-extern void sys_timer_cancel();
-extern void sys_vector_gun(int on);
-extern void sys_vector_move_to(float x, float y);
-extern void sys_vector_render(void);
+#include <math.h>
+#include "sys_host.h"
 
 #define VECTOR_MAX_X 1200
 #define VECTOR_MAX_Y 1200
