@@ -1,9 +1,12 @@
-#define MAX_ASTEROIDS 10
 #define TRUE -1
 #define FALSE 0
 #define ASTEROID_SIZE_COUNT 3
 #define ASTEROID_MODEL_POINT_COUNT 10
 #define ASTEROID_MODEL_COUNT 12
+
+// Tuning
+#define MAX_ASTEROIDS 10
+#define ASTEROID_VELOCITY_MAX 100
 
 struct point {
     double x;
@@ -15,7 +18,8 @@ struct asteroid {
     unsigned char active; // True if this asteroid is alive.
     unsigned char size; // Index into asteroid_sizes[].
     double* model; // Pointer to the points in asteroid_models.
-    struct point pos;
+    struct point pos; // Position
+    struct point vel; // Velocity
 };
 
 struct asteroids_state {

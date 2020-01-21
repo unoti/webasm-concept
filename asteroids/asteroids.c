@@ -32,6 +32,11 @@ int rand_index(int limit) {
    return rand_int(0, limit - 1);
 }
 
+double rand_range(double low, double hi) {
+   double range = hi - low;
+   return sys_random() * range + low;
+}
+
 void populate_asteroids(struct asteroids_state* state) {
    int model = 0;
    for (int i=0; i<MAX_ASTEROIDS; i++) {
@@ -43,11 +48,26 @@ void populate_asteroids(struct asteroids_state* state) {
       a->model = get_asteroid_model(model);
       a->pos.x = sys_random() * VECTOR_MAX_X;
       a->pos.y = sys_random() * VECTOR_MAX_Y;
-      writeln("pos");
-      sys_print_num(a->pos.x);
-      writeln("size");
-      sys_print_num(a->size);
+      a->vel.x = rand_range(-ASTEROID_VELOCITY_MAX, ASTEROID_VELOCITY_MAX);
+      a->vel.y = rand_range(-ASTEROID_VELOCITY_MAX, ASTEROID_VELOCITY_MAX);
       model = (model + 1) % ASTEROID_MODEL_COUNT;
+   }
+}
+
+void update(struct asteroids_state* state, double elapsed_seconds) {
+   state->frame_count++;
+   if (state->frame_count > 500) {
+      state->frame_count = 0;
+      populate_asteroids(state);
+   }
+
+   for (int i=0; i<MAX_ASTEROIDS; i++) {
+      struct asteroid* a = &state->asteroids[i];
+      if (!a->active)
+         continue;
+      
+      a->pos.x += a->vel.x * elapsed_seconds;
+      a->pos.y += a->vel.y * elapsed_seconds;
    }
 }
 
@@ -59,9 +79,11 @@ void init_state(struct asteroids_state* state) {
 
 /** Called by host when a timer expires. */
 void sys_timer_expired(float elapsed_milliseconds) {
-   writeln("asteroids.c: Timer called");
-   writeln("Cancelling timer");
-   sys_timer_cancel();
+   //writeln("asteroids.c: Timer called");
+   //writeln("Cancelling timer");
+   //sys_timer_cancel();
+   float elapsed_seconds = elapsed_milliseconds / 1000;
+   update(&state, elapsed_seconds);
    render(&state);
 }
 

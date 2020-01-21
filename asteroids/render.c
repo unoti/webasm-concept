@@ -3,7 +3,7 @@
 #include "micromath.h"
 #include "render.h"
 
-int asteroid_sizes[] = {80, 50, 30};
+int asteroid_sizes[] = {120, 50, 20};
 
 void vector_line(float x0, float y0, float x1, float y1) {
    sys_vector_gun(0);
