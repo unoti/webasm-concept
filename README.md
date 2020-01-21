@@ -42,8 +42,8 @@ export PATH=$PATH:/usr/lib/llvm-8/bin #*TODO: get this into the container image
 cd /code
 ```
 
-apt-get install bsdmainutils # For hexdump / hd
-apt-get install lld # Is this still needed? yes
+apt-get install bsdmainutils # For hexdump / hd -- it's in the dockerfile now
+apt-get install lld # Is this still needed? yes -- in the dockerfile now
 
 vscode extension dtsvet.vscode-wasm -- preview wasm files by right clicking them
 
