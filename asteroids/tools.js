@@ -6,6 +6,25 @@ let size = parseInt(document.getElementById('asteroid-size').textContent);
 console.log(`size=${size}`);
 render_asteroid(display, asteroid, size);
 render_asteroid_code(document.getElementById('asteroid-code'), asteroid);
+generate_sine_table(document.getElementById('sine-table'));
+
+function generate_sine_table(element) {
+    let text = `#define PI ${Math.PI}\n`;
+
+    // Generate 256 values of sine ranging from 0 to 2*PI.
+    // Note that the value for table[255] is NOT equal to table[0].
+    let segments = 256;
+    let delta = Math.PI * 2 / segments;
+    text += `#define TWO_PI ${2 * Math.PI}\n`;
+    text += `#define PI_BY_2 ${Math.PI/2}\n`;
+    text += `#define PI_BY_128 ${delta}\n`
+    for (var i=0; i<segments; i++) {
+        let angle = i * delta;
+        let x = Math.sin(angle);
+        text += `${x}, // ${i}\n`;
+    }
+    element.textContent = text;
+}
 
 function make_asteroid() {
     let segments = 10;
@@ -46,13 +65,11 @@ function render_asteroid(display, points, size) {
 }
 
 function render_asteroid_code(element, asteroid) {
-    var text = "[\n";
+    var text = "// Model \n";
     for (var i=0; i < asteroid.length; i++) {
         let x = asteroid[i][0];
         let y = asteroid[i][1];
         text += `${x}, ${y},\n`;
     }
-    text += "],";
-
     element.textContent = text;
 }
